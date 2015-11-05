@@ -1,6 +1,4 @@
 var Profile = require("./profile.js");
-
-
 var studentProfile = new Profile("colinstodd2");
 
 /**
