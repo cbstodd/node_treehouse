@@ -10,12 +10,7 @@ http.createServer(function(request, response) {
   router.home(request, response);
   router.user(request, response);
 }).listen(1337, "127.0.0.1");
+  // localhost:1337
 
 //Prints Message to server console.
 console.log('Server running at localhost:1337');
-
-
-
-//4. Function that handels the reading of files and merge in value.
-//read from file and get a string
-//merge values in to string.

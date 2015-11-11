@@ -1,20 +1,22 @@
-var Profile = require("./profile.js");
-
+var Profile = require('./profile.js');
+var renderer = require('./renderer.js');
 //Connects from app.js
 
-
+var commonHeaders = {
+  'Content-Type': 'text/html'
+};
 
 //2. Handel HTTP route GET / and POST / i.e. th_search.html
 function home(request, response) {
   //if url === "/" && GET
   if (request.url === '/') {
     //show search
-    response.writeHead(200, {
-      'Content-Type': 'text/plain'
-    });
-    response.write('Header\n');
-    response.write('Search\n');
-    response.write('Footer\n');
+    response.writeHead(200, commonHeaders);
+    renderer.view('header', {}, response);
+    renderer.view('profile', {}, response);
+    renderer.view('search_form', {}, response);
+    renderer.view('footer', {}, response);
+    response.end();
     //if url === "/" && POST
     //redirect to /:username
   }
@@ -28,10 +30,8 @@ function user(request, response) {
   var username = request.url.replace('/', '');
   if (username.length > 0) {
 
-    response.writeHead(200, {
-      'Content-Type': 'text/plain'
-    });
-    response.write('Header\n');
+    response.writeHead(200, commonHeaders);
+    // response.write('header', {}, response);
 
     //get json from Treehouse
     var studentProfile = new Profile(username);
@@ -47,15 +47,23 @@ function user(request, response) {
         javascriptPoints: profileJSON.points.JavaScript
       };
       //Simple response.
-      response.write(values.username + " has " + values.badges + " badges \n");
-      response.write('Footer\n');
+      //Passes in the actual values to the profile template.
+      renderer.view('header', {}, reponse);
+      renderer.view('profile', values, response);
+      renderer.view('search_form', {}, response);
+      renderer.view('footer', {}, response);
+      response.end();
     });
     //on 'error'
     studentProfile.on("error", function(error) {
       //show error
-      response.write(error.message + '\n');
-      response.write('Footer\n');
+      renderer.view('header', {}, response);
+      renderer.view('error', { errorMessage: error.message }, response);
+      renderer.view('search_form', {}, response);
+      renderer.view('footer', {}, response);
+
     });
+
   }
 }
 
